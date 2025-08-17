@@ -14,5 +14,5 @@ A quick project created in react to help track games of Texas Holden Poker
 ## to - do
 
 - Fix mobile design
-- Client-side storage of games to allow for refreshes of needed
-- professionalise code
+- Client-side storage of games to allow for refreshes if needed
+- professionalise code and file structure
