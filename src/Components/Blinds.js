@@ -1,41 +1,88 @@
 "use client";
+import { useState, useEffect } from "react";
 
-import { useState, useEffect, useRef } from "react";
-import {
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { CURRENT_BLINDS, NEXT_BLINDS, SOLIDUS } from "../Constants/Strings.js";
 
-import SettingsIcon from "./SettingsIcon.js";
+import { DEFAULT_BLIND_LIST } from "../Constants/Settings.js";
 
-export default function BlindBoard(props) {
+import SettingsIcon from "../Icons/SettingsIcon.js";
+
+import BlindsModal from "../Modals/BlindsModal.js";
+
+export default function Blinds(props) {
+  const [smallBlind, setSmallBlind] = useState(0);
+  const [bigBlind, setBigBlind] = useState(0);
+  const [nextSmallBlind, setNextSmallBlind] = useState(0);
+  const [nextBigBlind, setNextBigBlind] = useState(0);
+  const [blindsList, setBlindsList] = useState(DEFAULT_BLIND_LIST);
+
+  const [isBlindsModalOpen, setIsBlindsModalOpen] = useState(false);
+
+  const handleBlindsListChange = (l) => {
+    setBlindsList(l);
+  };
+
+  useEffect(() => {
+    const levelNumber = Number(props.currentLevel || props.currentLevel);
+    const result = blindsList.find((item) => item.id === levelNumber);
+    if (result) {
+      setSmallBlind(result.small);
+      setBigBlind(result.big);
+    }
+
+    const nextLevelNumber = levelNumber + 1;
+    const nextresult = blindsList.find((item) => item.id === nextLevelNumber);
+    if (nextresult) {
+      setNextSmallBlind(nextresult.small);
+      setNextBigBlind(nextresult.big);
+    }
+  }, [props.currentLevel]);
+
+  return (
+    <>
+      <div
+        className="absolute top-2 right-2 size-6 cursor-pointer z-10"
+        onClick={(e) => setIsBlindsModalOpen(true)}
+      >
+        <SettingsIcon />
+      </div>
+
+      <div className=" border-r border-white flex-1 items-center justify-center">
+        <h2 className="text-lg border-b border-white mx-7">{CURRENT_BLINDS}</h2>
+
+        <p className="text-5xl ">
+          {smallBlind >= 1000 ? smallBlind / 1000 + "k" : smallBlind}
+          {SOLIDUS}
+          {bigBlind >= 1000 ? bigBlind / 1000 + "k" : bigBlind}
+        </p>
+      </div>
+      <div className=" flex-1 items-center justify-center">
+        <h2 className="text-lg border-b border-white mx-7">{NEXT_BLINDS}</h2>
+        <p className="text-5xl ">
+          {nextSmallBlind >= 1000
+            ? nextSmallBlind / 1000 + "k"
+            : nextSmallBlind}
+          {SOLIDUS}
+          {nextBigBlind >= 1000 ? nextBigBlind / 1000 + "k" : nextBigBlind}
+        </p>
+      </div>
+      <BlindsModal
+        isBlindsModalOpen={isBlindsModalOpen}
+        BlindsList={blindsList}
+        HandleBlindsListChange={handleBlindsListChange}
+        closeBlindsModal={() => setIsBlindsModalOpen(false)}
+      />
+    </>
+  );
+}
+/*
   const [currentLevel] = useState(props.currentLevel || 1);
   const [smallBlind, setSmallBlind] = useState(0);
   const [bigBlind, setBigBlind] = useState(0);
   const [nextSmallBlind, setNextSmallBlind] = useState(0);
   const [nextbigBlind, setNextBigBlind] = useState(0);
 
-  const [blindList] = useState([
-    { id: 1, level: 1, small: 25, big: 50 },
-    { id: 2, level: 2, small: 50, big: 100 },
-    { id: 3, level: 3, small: 75, big: 150 },
-    { id: 4, level: 4, small: 100, big: 200 },
-    { id: 5, level: 5, small: 200, big: 400 },
-    { id: 6, level: 6, small: 300, big: 600 },
-    { id: 7, level: 7, small: 500, big: 1000 },
-    { id: 8, level: 8, small: 800, big: 1600 },
-    { id: 9, level: 9, small: 1000, big: 2000 },
-    { id: 10, level: 10, small: 1500, big: 3000 },
-    { id: 11, level: 11, small: 2000, big: 4000 },
-    { id: 12, level: 12, small: 3000, big: 6000 },
-    { id: 13, level: 13, small: 5000, big: 10000 },
-    { id: 14, level: 14, small: 7500, big: 15000 },
-    { id: 15, level: 15, small: 10000, big: 20000 },
-    { id: 16, level: 16, small: 15000, big: 30000 },
-  ]);
+  const [blindList] = useState(constants.DEFAULT_BLIND_LIST);
 
   useEffect(() => {
     const levelNumber = Number(props.currentLevel || currentLevel);
@@ -53,7 +100,6 @@ export default function BlindBoard(props) {
     }
   }, [props.currentLevel]);
 
-  /* modal */
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -67,6 +113,7 @@ export default function BlindBoard(props) {
     closeModal();
   };
 
+  /* modal 
   return (
     <div className="relative grid grid-cols-2 gap-3 ">
       <div
@@ -97,16 +144,16 @@ export default function BlindBoard(props) {
         saveData={saveData}
       />
     </div>
-  );
-}
+  );*/
 
+/*
 export function CurrentBlind({ smallBlind, bigBlind }) {
   return (
-    <div id="poker-board-blind-details" className="poker-board-current-blinds">
-      <p className="text-3xl">Current Blinds</p>
-      <div className="poker-board-blinds-card text-9xl">
+    <div id="poker-board-blind-details" className="poker-board-blinds-card">
+      <p className="text-lg">Current Blinds</p>
+      <p className="text-5xl">
         {smallBlind} / {bigBlind}
-      </div>
+      </p>
     </div>
   );
 }
@@ -114,15 +161,14 @@ export function CurrentBlind({ smallBlind, bigBlind }) {
 export function NextBlind({ smallBlind, bigBlind }) {
   return (
     <div
-      id="poker-board-blind-details"
-      className="poker-board-next-blinds relative"
+      id="poker-board-next-blind-details"
+      className="poker-board-blinds-card relative"
     >
-      <p className="text-3xl">Next Blinds</p>
-      <div className="poker-board-blinds-card">
-        <p className="text-9xl">
-          {smallBlind} / {bigBlind}
-        </p>
-      </div>
+      <p className="text-lg">Next Blinds</p>
+
+      <p className="text-5xl">
+        {smallBlind} / {bigBlind}
+      </p>
     </div>
   );
 }
@@ -209,7 +255,7 @@ export function ModalDialogue({
                 <button
                   type="button"
                   onClick={() => save(Incriment)}
-                  className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto"
+                  className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold   shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto"
                 >
                   Save
                 </button>
@@ -229,3 +275,4 @@ export function ModalDialogue({
     </div>
   );
 }
+*/

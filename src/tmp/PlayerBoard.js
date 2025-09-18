@@ -11,24 +11,29 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 import SettingsIcon from "./SettingsIcon.js";
 
-export default function PlayerBoard({
-  setTotalBuyIns,
-  setTotalRebuys,
-  setTotalBonuss,
-}) {
+import {
+  TABLE,
+  TOTAL_PLAYERS,
+  PLAYERS_ACTIVE,
+  RE_BUYS,
+  BONUSS,
+} from "../Constants/Strings.js";
+
+export function PlayerBoard(props) {
   /* Modal */
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [playerList, setPlayerList] = useState([
-    { id: 0, name: "-", active: false, buyin: false, rebuy: 0 },
-    { id: 1, name: "-", active: false, buyin: false, rebuy: 0 },
-    { id: 2, name: "-", active: false, buyin: false, rebuy: 0 },
-    { id: 3, name: "-", active: false, buyin: false, rebuy: 0 },
-    { id: 4, name: "-", active: false, buyin: false, rebuy: 0 },
-    { id: 5, name: "-", active: false, buyin: false, rebuy: 0 },
-    { id: 6, name: "-", active: false, buyin: false, rebuy: 0 },
-    { id: 7, name: "-", active: false, buyin: false, rebuy: 0 },
-    { id: 8, name: "-", active: false, buyin: false, rebuy: 0 },
-    { id: 9, name: "-", active: false, buyin: false, rebuy: 0 },
+    { id: 0, name: "1-", active: true, buyin: true, rebuy: 0 },
+    { id: 1, name: "2-", active: true, buyin: false, rebuy: 0 },
+    { id: 2, name: "3-", active: true, buyin: true, rebuy: 0 },
+    { id: 3, name: "44-", active: true, buyin: false, rebuy: 0 },
+    { id: 4, name: "-5", active: true, buyin: false, rebuy: 0 },
+    { id: 5, name: "-5", active: true, buyin: true, rebuy: 0 },
+    { id: 6, name: "-566", active: true, buyin: false, rebuy: 0 },
+    { id: 7, name: "567-", active: true, buyin: true, rebuy: 0 },
+    { id: 8, name: "-567", active: true, buyin: false, rebuy: 0 },
+    { id: 9, name: "675675-", active: true, buyin: false, rebuy: 0 },
   ]);
 
   const openModal = () => setIsModalOpen(true);
@@ -39,11 +44,7 @@ export default function PlayerBoard({
     else closeModal();
   };
 
-  const saveData = (e) => {
-    setPlayerList(e);
-    closeModal();
-  };
-
+  /*
   useEffect(() => {
     const totals = playerList.reduce(
       (acc, playa) => {
@@ -62,18 +63,66 @@ export default function PlayerBoard({
     setTotalBonuss(bonuss);
   }, [playerList]);
 
+*/
+
+  /*
+
+
+
+export const PRIZE_POOL = "Prize Pool";
+export const START = "Start";
+export const LEVEL = "Level:";
+export const CURRENT_BLINDS = "Current Blinds";
+export const NEXT_BLINDS = "Next Blinds";
+export const TABLE = "Table";
+export const TOTAL_PLAYERS = "Total Players";
+export const PLAYERS_ACTIVE = "Players Active";
+export const BUY_INS = "Buy-Ins";
+export const BUY_IN = "buy in";
+export const RE_BUYS = "Re-Buys";
+export const RE_BUY = "Re-buy";
+export const CHIPS = "Chips";
+export const AVERAGE = "Avg";
+export const FOR = "for";
+export const FREEZE_OUT = "Freeze out";
+export const POST_MERIDIEM = "PM";
+export const ANTE_MERIDIEM = "AM";
+export const SOLIDUS = "/";
+export const EQUALS = "=";
+export const CURRENCY = "$";
+export const COLON = ":";
+
+*/
+
+  const saveData = (e) => {
+    // setPlayerList(e);
+    //closeModal();
+  };
+
+  let active = 0;
+
+  playerList.map((player) => {
+    if (player.active === true) {
+      active++;
+    }
+  });
+
   return (
-    <div id="poker-board-player-details" className="rounded-3xl p-5">
-      <div className="relative">
-        <div
-          className="absolute top-2 right-2 size-6 cursor-pointer z-10"
-          onClick={(e) => openModal()}
-        >
-          <SettingsIcon />
-        </div>
+    <div className="w-48 flex flex-col h-full m-2 ">
+      <div
+        id="poker-board-stats-board"
+        className="p-2 items-center justify-center mb-3"
+      >
         <span className="poker-board-playing-stats">
-          <PlayingStats PlayerList={playerList} />
-          <PlayerList PlayerList={playerList} />
+          <div className="relative">
+            <h2 className="text-xl border-b border-white">{TABLE}</h2>
+            <p className="text-lg mt-1">
+              {TOTAL_PLAYERS} {playerList.length}
+            </p>
+            <p className="text-lg mt-1">
+              {PLAYERS_ACTIVE} {active}
+            </p>
+          </div>
         </span>
       </div>
 
@@ -86,39 +135,18 @@ export default function PlayerBoard({
     </div>
   );
 }
-
-export function PlayingStats({ PlayerList }) {
-  let active = 0;
-
-  // eslint-disable-next-line array-callback-return
-  PlayerList.map((player) => {
-    if (player.active === true) {
-      active++;
-    }
-  });
-
-  return (
-    <div className="relative">
-      <p className="text-5xl pb-2 mb-2 border-b ">Table</p>
-
-      <div id="poker-board-players-count">
-        total players: {PlayerList.length}
-      </div>
-
-      <div id="poker-board-players-remaining">
-        player still playing: {active}
-      </div>
-    </div>
-  );
-}
+//<PlayerList PlayerList={playerList} />;
 
 export function PlayerList({ PlayerList }) {
   return (
-    <div>
-      <h2 className="text-5xl pb-2 mb-2 mt-10 border-b ">Player List</h2>
+    <div className="relative">
+      <h2 className="text-2xl border-b border-white">{}</h2>
       <ol>
         {PlayerList.map((player) => (
-          <li key={player.id} className={player.name === "-" ? "hidden" : ""}>
+          <li
+            key={player.id}
+            className={"text-lg " + (player.name === "-" ? "hidden" : "")}
+          >
             {player.buyin === false ? "" : "*"}
             {player.name}
             {player.rebuy > 0 ? "(" + player.rebuy + ")" : ""}
@@ -339,7 +367,7 @@ export function ModalDialogue({
                 <button
                   type="button"
                   onClick={() => save()}
-                  className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto"
+                  className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold   shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto"
                 >
                   Save
                 </button>
